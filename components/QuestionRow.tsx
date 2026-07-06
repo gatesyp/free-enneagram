@@ -16,7 +16,7 @@ export function QuestionRow({ number, text, value, onChange }: QuestionRowProps)
         <span className="mr-2 font-semibold text-indigo-600">{number}.</span>
         {text}
       </p>
-      <LikertScale value={value} onChange={onChange} compact />
+      <LikertScale value={value} onChange={onChange} />
     </div>
   );
 }

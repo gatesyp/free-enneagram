@@ -14,10 +14,9 @@ export function Landing({ onStart }: LandingProps) {
         <h1 className="font-display mb-4 text-4xl font-semibold tracking-tight text-stone-900">
           Free Enneagram Test
         </h1>
-        <p className="mb-2 text-lg leading-relaxed text-stone-600">
-          Discover your personality type through 45 thoughtful questions.
-          Learn your core type, wing, and how you compare across all nine
-          types.
+        <p className="mb-8 text-lg leading-relaxed text-stone-600">
+          Discover your Enneagram type, wing, and how you compare across all
+          nine types.
         </p>
         <p className="mb-8 text-sm text-stone-400">
           Your answers stay on your device — nothing is stored or sent
@@ -30,7 +29,6 @@ export function Landing({ onStart }: LandingProps) {
         >
           Start Test
         </button>
-        <p className="mt-4 text-xs text-stone-400">Takes about 8 minutes</p>
       </div>
     </div>
   );

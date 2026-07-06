@@ -7,6 +7,9 @@ export interface TestResult {
   scores: Record<EnneagramTypeId, number>;
   isTie: boolean;
   tiedTypes: EnneagramTypeId[];
+  isWingTie: boolean;
+  wingTiedTypes: EnneagramTypeId[];
+  topScore: number;
 }
 
 function emptyScores(): Record<EnneagramTypeId, number> {
@@ -28,7 +31,7 @@ export function tallyScores(
   return scores;
 }
 
-function getAdjacentTypes(
+export function getAdjacentTypes(
   type: EnneagramTypeId
 ): [EnneagramTypeId, EnneagramTypeId] {
   if (type === 1) return [9, 2];
@@ -36,17 +39,39 @@ function getAdjacentTypes(
   return [(type - 1) as EnneagramTypeId, (type + 1) as EnneagramTypeId];
 }
 
+export function getWingResult(
+  primaryType: EnneagramTypeId,
+  scores: Record<EnneagramTypeId, number>
+): {
+  wing: EnneagramTypeId;
+  isWingTie: boolean;
+  wingTiedTypes: EnneagramTypeId[];
+} {
+  const [left, right] = getAdjacentTypes(primaryType);
+
+  if (scores[left] === scores[right]) {
+    return { wing: left, isWingTie: true, wingTiedTypes: [left, right] };
+  }
+
+  const wing = scores[left] > scores[right] ? left : right;
+  return { wing, isWingTie: false, wingTiedTypes: [wing] };
+}
+
 export function getWing(
   primaryType: EnneagramTypeId,
   scores: Record<EnneagramTypeId, number>
 ): EnneagramTypeId {
-  const [left, right] = getAdjacentTypes(primaryType);
-  return scores[left] >= scores[right] ? left : right;
+  return getWingResult(primaryType, scores).wing;
 }
 
 export function getPrimaryType(
   scores: Record<EnneagramTypeId, number>
-): { type: EnneagramTypeId; isTie: boolean; tiedTypes: EnneagramTypeId[] } {
+): {
+  type: EnneagramTypeId;
+  isTie: boolean;
+  tiedTypes: EnneagramTypeId[];
+  topScore: number;
+} {
   const maxScore = Math.max(...ALL_TYPE_IDS.map((id) => scores[id]));
   const tiedTypes = ALL_TYPE_IDS.filter((id) => scores[id] === maxScore);
 
@@ -54,13 +79,27 @@ export function getPrimaryType(
     type: tiedTypes[0],
     isTie: tiedTypes.length > 1,
     tiedTypes,
+    topScore: maxScore,
   };
 }
 
 export function calculateResults(answers: (number | null)[]): TestResult {
   const scores = tallyScores(answers);
-  const { type: primaryType, isTie, tiedTypes } = getPrimaryType(scores);
-  const wing = getWing(primaryType, scores);
+  const { type: primaryType, isTie, tiedTypes, topScore } =
+    getPrimaryType(scores);
+  const { wing, isWingTie, wingTiedTypes } = getWingResult(
+    primaryType,
+    scores
+  );
 
-  return { primaryType, wing, scores, isTie, tiedTypes };
+  return {
+    primaryType,
+    wing,
+    scores,
+    isTie,
+    tiedTypes,
+    isWingTie,
+    wingTiedTypes,
+    topScore,
+  };
 }

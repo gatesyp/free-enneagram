@@ -44,7 +44,7 @@ export const QUESTIONS: Question[] = [
   { id: 32, text: "I guard my time and energy carefully.", typeId: 5 },
   { id: 33, text: "I am vigilant about potential risks and threats.", typeId: 6 },
   { id: 34, text: "I enjoy planning exciting possibilities for the future.", typeId: 7 },
-  { id: 35, text: "I dislike feeling controlled or vulnerable.", typeId: 8 },
+  { id: 35, text: "I dislike feeling controlled by others.", typeId: 8 },
   { id: 36, text: "I feel most at ease when my environment is calm and harmonious.", typeId: 9 },
   { id: 37, text: "I often feel responsible for improving the world around me.", typeId: 1 },
   { id: 38, text: "Being needed by others makes me feel valued.", typeId: 2 },

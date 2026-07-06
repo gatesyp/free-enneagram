@@ -8,43 +8,48 @@ const LABELS = [
   "Strongly Agree",
 ] as const;
 
-const SHORT_LABELS = ["SD", "D", "N", "A", "SA"] as const;
+const ANCHOR_LABELS: Partial<Record<number, string>> = {
+  1: "Strongly Disagree",
+  3: "Neutral",
+  5: "Strongly Agree",
+};
 
 interface LikertScaleProps {
   value: number | null;
   onChange: (value: number) => void;
-  compact?: boolean;
 }
 
-export function LikertScale({ value, onChange, compact }: LikertScaleProps) {
+export function LikertScale({ value, onChange }: LikertScaleProps) {
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex gap-1 sm:gap-2">
-        {[1, 2, 3, 4, 5].map((score) => {
-          const isSelected = value === score;
-          return (
+    <div className="flex gap-1 sm:gap-2">
+      {[1, 2, 3, 4, 5].map((score) => {
+        const isSelected = value === score;
+        const anchorLabel = ANCHOR_LABELS[score];
+
+        return (
+          <div key={score} className="flex flex-1 flex-col items-center gap-1">
             <button
-              key={score}
               type="button"
               onClick={() => onChange(score)}
               aria-label={LABELS[score - 1]}
-              className={`flex-1 rounded-lg border px-1 py-2.5 text-xs font-medium transition-all sm:px-2 sm:py-3 sm:text-sm ${
+              className={`w-full rounded-lg border py-2.5 text-sm font-semibold transition-all sm:py-3 sm:text-base ${
                 isSelected
                   ? "border-indigo-600 bg-indigo-600 text-white shadow-sm"
-                  : "border-stone-200 bg-white text-stone-600 hover:border-indigo-300 hover:bg-indigo-50"
+                  : "border-stone-200 bg-white text-stone-700 hover:border-indigo-300 hover:bg-indigo-50"
               }`}
             >
-              {compact ? SHORT_LABELS[score - 1] : score}
+              {score}
             </button>
-          );
-        })}
-      </div>
-      {!compact && (
-        <div className="flex justify-between text-xs text-stone-400">
-          <span>Disagree</span>
-          <span>Agree</span>
-        </div>
-      )}
+            {anchorLabel ? (
+              <span className="px-0.5 text-center text-[10px] leading-tight text-stone-400 sm:text-xs">
+                {anchorLabel}
+              </span>
+            ) : (
+              <span className="h-[26px] sm:h-[30px]" aria-hidden="true" />
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }

@@ -4,12 +4,14 @@ import { ENNEAGRAM_TYPES, type EnneagramTypeId } from "@/lib/types";
 
 interface ScoreChartProps {
   scores: Record<EnneagramTypeId, number>;
-  primaryType: EnneagramTypeId;
-  wing: EnneagramTypeId;
+  tiedTypes: EnneagramTypeId[];
+  wingTiedTypes: EnneagramTypeId[];
 }
 
-export function ScoreChart({ scores, primaryType, wing }: ScoreChartProps) {
+export function ScoreChart({ scores, tiedTypes, wingTiedTypes }: ScoreChartProps) {
   const maxScore = Math.max(...Object.values(scores));
+  const tiedSet = new Set(tiedTypes);
+  const wingSet = new Set(wingTiedTypes);
 
   return (
     <div className="flex flex-col gap-2.5">
@@ -17,8 +19,8 @@ export function ScoreChart({ scores, primaryType, wing }: ScoreChartProps) {
         const type = ENNEAGRAM_TYPES[id];
         const score = scores[id];
         const width = maxScore > 0 ? (score / maxScore) * 100 : 0;
-        const isPrimary = id === primaryType;
-        const isWing = id === wing && id !== primaryType;
+        const isPrimary = tiedSet.has(id);
+        const isWing = wingSet.has(id) && !isPrimary;
 
         return (
           <div key={id} className="flex items-center gap-2">
