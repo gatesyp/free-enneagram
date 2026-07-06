@@ -32,10 +32,12 @@ export function AdminGallery({ authed }: AdminGalleryProps) {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("/api/admin/results");
+      const response = await fetch("/api/admin/results", {
+        credentials: "include",
+      });
       if (!response.ok) {
         setLoggedIn(false);
-        setError("Session expired. Please log in again.");
+        setError("Could not load results. Please log in again.");
         return;
       }
       const data = await response.json();
@@ -60,10 +62,16 @@ export function AdminGallery({ authed }: AdminGalleryProps) {
       const response = await fetch("/api/admin/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ password }),
       });
       if (!response.ok) {
-        setError("Invalid password.");
+        const data = await response.json().catch(() => ({}));
+        setError(
+          data.error === "Admin access is not configured"
+            ? "Admin is not configured on the server."
+            : "Invalid password."
+        );
         return;
       }
       setLoggedIn(true);

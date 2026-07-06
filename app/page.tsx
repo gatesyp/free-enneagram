@@ -10,6 +10,7 @@ import { ShareLink } from "@/components/ShareLink";
 import { QUESTIONS, TOTAL_PAGES } from "@/lib/questions";
 import { calculateResults } from "@/lib/scoring";
 import { createTestSession, syncAnswers } from "@/lib/sync";
+import { scrollToTop } from "@/lib/scroll";
 
 type Step = "landing" | "name" | "quiz" | "results";
 
@@ -61,18 +62,16 @@ export default function Home() {
     if (page < TOTAL_PAGES - 1) {
       await persistAnswers(answers);
       setPage((p) => p + 1);
-      window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       await persistAnswers(answers);
       setStep("results");
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      scrollToTop();
     }
   };
 
   const handleBack = () => {
     if (page > 0) {
       setPage((p) => p - 1);
-      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
@@ -81,7 +80,7 @@ export default function Home() {
     setPage(0);
     setResultId(null);
     setAnswers(Array(QUESTIONS.length).fill(null));
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    scrollToTop();
   };
 
   if (step === "landing") {

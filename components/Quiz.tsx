@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { getQuestionsForPage, QUESTIONS_PER_PAGE, TOTAL_PAGES } from "@/lib/questions";
+import { scrollToTop } from "@/lib/scroll";
 import { ProgressBar } from "./ProgressBar";
 import { QuestionRow } from "./QuestionRow";
 
@@ -19,14 +21,21 @@ export function Quiz({
   onContinue,
   onBack,
 }: QuizProps) {
+  const topRef = useRef<HTMLDivElement>(null);
   const questions = getQuestionsForPage(page);
   const startIndex = page * QUESTIONS_PER_PAGE;
   const pageAnswers = questions.map((_, i) => answers[startIndex + i]);
   const allAnswered = pageAnswers.every((a) => a !== null);
   const isLastPage = page === TOTAL_PAGES - 1;
 
+  useEffect(() => {
+    scrollToTop();
+    topRef.current?.scrollIntoView({ block: "start" });
+  }, [page]);
+
   return (
     <div className="flex flex-1 flex-col">
+      <div ref={topRef} className="scroll-mt-0" />
       <ProgressBar page={page} totalPages={TOTAL_PAGES} />
       <div className="mx-auto w-full max-w-lg flex-1 px-4 py-6">
         <h2 className="font-display mb-6 text-xl font-semibold text-stone-900">
