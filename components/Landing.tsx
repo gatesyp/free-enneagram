@@ -18,10 +18,6 @@ export function Landing({ onStart }: LandingProps) {
           Discover your Enneagram type, wing, and how you compare across all
           nine types.
         </p>
-        <p className="mb-8 text-sm text-stone-400">
-          Your answers stay on your device — nothing is stored or sent
-          anywhere. Share your results with a screenshot.
-        </p>
         <button
           type="button"
           onClick={onStart}

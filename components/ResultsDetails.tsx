@@ -9,6 +9,7 @@ import { TypeProfile } from "./TypeProfile";
 interface ResultsDetailsProps {
   result: TestResult;
   onRetake: () => void;
+  showRetake?: boolean;
 }
 
 function formatTypeList(types: number[]): string {
@@ -17,7 +18,11 @@ function formatTypeList(types: number[]): string {
   return `Types ${types.slice(0, -1).join(", ")} and ${types[types.length - 1]}`;
 }
 
-export function ResultsDetails({ result, onRetake }: ResultsDetailsProps) {
+export function ResultsDetails({
+  result,
+  onRetake,
+  showRetake = true,
+}: ResultsDetailsProps) {
   const {
     primaryType,
     wing,
@@ -214,13 +219,22 @@ export function ResultsDetails({ result, onRetake }: ResultsDetailsProps) {
         </dl>
       </div>
 
-      <button
-        type="button"
-        onClick={onRetake}
-        className="w-full rounded-xl border border-stone-300 bg-white px-6 py-4 font-semibold text-stone-700 transition-colors hover:bg-stone-50"
-      >
-        Retake Test
-      </button>
+      {showRetake ? (
+        <button
+          type="button"
+          onClick={onRetake}
+          className="w-full rounded-xl border border-stone-300 bg-white px-6 py-4 font-semibold text-stone-700 transition-colors hover:bg-stone-50"
+        >
+          Retake Test
+        </button>
+      ) : (
+        <a
+          href="/"
+          className="block w-full rounded-xl border border-stone-300 bg-white px-6 py-4 text-center font-semibold text-stone-700 transition-colors hover:bg-stone-50"
+        >
+          Take the Test
+        </a>
+      )}
     </div>
   );
 }
